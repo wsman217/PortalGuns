@@ -1,0 +1,5 @@
+main: main.java.me.wsman217.portalguns.PortalGuns
+name: PortalGuns
+version: 1.0
+author: wsman217
+api-version: 1.14
