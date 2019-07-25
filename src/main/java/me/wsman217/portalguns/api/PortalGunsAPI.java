@@ -53,6 +53,7 @@ public class PortalGunsAPI {
 			if (items.get(chars) != null)
 				recipe.setIngredient((char) chars, items.get(chars).getData());
 			recipeMap.put(index, items.get(chars));
+			index++;
 		}
 
 		CraftingListener.addRecipe(recipeMap);

@@ -29,11 +29,11 @@ public class PortalGuns extends JavaPlugin {
 		meta.setDisplayName("Test");
 		pearl.setItemMeta(meta);
 		
-		items.put(new Character('A'), pearl);
+		items.put(new Character('A'), null);
 		items.put(new Character('B'), null);
 		items.put(new Character('C'), null);
 		items.put(new Character('D'), null);
-		items.put(new Character('E'), null);
+		items.put(new Character('E'), pearl);
 		items.put(new Character('F'), null);
 		items.put(new Character('G'), null);
 		items.put(new Character('H'), null);

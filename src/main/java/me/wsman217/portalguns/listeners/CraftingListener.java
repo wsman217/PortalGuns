@@ -23,12 +23,12 @@ public class CraftingListener implements Listener {
 		recipes.add(recipe);
 		System.out.println("Added");
 	}
-	
+
 	@EventHandler
 	public void onCraftEvent(CraftItemEvent e) {
-				
-		loop: if (e.getRawSlot() == 9) {
-			ItemStack output = e.getInventory().getItem(9);
+
+		loop: if (e.getRawSlot() == 0) {
+			ItemStack output = e.getInventory().getItem(0);
 			for (ItemStack portalGun : portalGuns) {
 				if (output.isSimilar(portalGun)) {
 					break loop;
@@ -46,32 +46,34 @@ public class CraftingListener implements Listener {
 		for (HashMap<Integer, ItemStack> map : CraftingListener.recipes) {
 			recipes.add(map);
 		}
-		
+
 		for (HashMap<Integer, ItemStack> recipe : CraftingListener.recipes) {
 			for (int i = 0; i < 9; i++) {
 				for (Integer indexes : recipe.keySet()) {
 					if (i == indexes) {
-						if (!inv.getItem(i + 1).isSimilar(recipe.get(indexes))) {
-							recipes.remove(recipe);
+						if (recipe.get(indexes) != null) {
+							if (!inv.getItem(i + 1).isSimilar(recipe.get(indexes))) {
+								recipes.remove(recipe);
+							}
 						}
 					}
 				}
 			}
 		}
-		
+
 		if (recipes.isEmpty()) {
 			e.setCancelled(true);
 			return;
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent e) {
 		ItemStack pearl = new ItemStack(Material.ENDER_PEARL);
 		ItemMeta meta = pearl.getItemMeta();
 		meta.setDisplayName("Test");
 		pearl.setItemMeta(meta);
-		
+
 		e.getPlayer().getInventory().addItem(pearl);
 	}
 }
