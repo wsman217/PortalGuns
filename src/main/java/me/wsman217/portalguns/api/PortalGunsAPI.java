@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,10 +41,40 @@ public class PortalGunsAPI {
 		return portalGunItem;
 	}
 
+	public static ItemStack createPortalGun(Material mat, int customModelData) {
+
+		NBTItem portalGunNBT = new NBTItem(new ItemStack(mat));
+		portalGunNBT.setString("FirstPortal", "X:null, Y:null, Z:null");
+		portalGunNBT.setString("SecondPortal", "X:null, Y:null, Z:null");
+
+		ItemStack portalGunItem = portalGunNBT.getItem();
+		ItemMeta portalGunMeta = portalGunItem.getItemMeta();
+
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.GOLD + "Left click portal gun to fire portal entrance.");
+		lore.add(ChatColor.GOLD + "Right click portal gun to fire portal exit.");
+		lore.add(ChatColor.GOLD + "Shift + left click to remove portals linked to that portal gun.");
+
+		portalGunMeta.setDisplayName(ChatColor.BLUE + "Portal Gun");
+		portalGunMeta.setLore(lore);
+		portalGunMeta.setCustomModelData(customModelData);
+		portalGunMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		portalGunMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		portalGunMeta.setUnbreakable(true);
+		portalGunItem.setItemMeta(portalGunMeta);
+
+		portalGuns.add(portalGunItem);
+		return portalGunItem;
+	}
+
 	public static void createPGRecipe(String topRow, String midRow, String bottomRow,
-			HashMap<Character, ItemStack> items, Material output) {
-		ItemStack recipeOutput = new ItemStack(createPortalGun(output));
-		ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(PortalGuns.getInstance(), "portalGun"), recipeOutput);
+			HashMap<Character, ItemStack> items, Material output, int customModelData) {
+		ItemStack recipeOutput;
+		if (customModelData == -1)
+			recipeOutput = new ItemStack(createPortalGun(output));
+		else
+			recipeOutput = new ItemStack(createPortalGun(output, customModelData));
+		ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(PortalGuns.getInstance(), "portal_gun"), recipeOutput);
 
 		recipe.shape(topRow, midRow, bottomRow);
 
@@ -51,7 +82,7 @@ public class PortalGunsAPI {
 		HashMap<Integer, ItemStack> recipeMap = new HashMap<Integer, ItemStack>();
 		for (Character chars : items.keySet()) {
 			if (items.get(chars) != null)
-				recipe.setIngredient((char) chars, items.get(chars).getData());
+				recipe.setIngredient((char) chars, items.get(chars).getType());
 			recipeMap.put(index, items.get(chars));
 			index++;
 		}
@@ -63,4 +94,8 @@ public class PortalGunsAPI {
 	public static ArrayList<ItemStack> getPortalGuns() {
 		return portalGuns;
 	}
+	
+	/*public static Block createNewPortal(Location loc) {
+		
+	}*/
 }

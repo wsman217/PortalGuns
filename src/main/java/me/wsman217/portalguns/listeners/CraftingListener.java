@@ -3,14 +3,11 @@ package main.java.me.wsman217.portalguns.listeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import main.java.me.wsman217.portalguns.api.PortalGunsAPI;
 
@@ -18,19 +15,28 @@ public class CraftingListener implements Listener {
 
 	private static ArrayList<HashMap<Integer, ItemStack>> recipes = new ArrayList<HashMap<Integer, ItemStack>>();
 	private static ArrayList<ItemStack> portalGuns = PortalGunsAPI.getPortalGuns();
+	private static ArrayList<ItemStack> outputs = new ArrayList<ItemStack>();
 
 	public static void addRecipe(HashMap<Integer, ItemStack> recipe) {
 		recipes.add(recipe);
-		System.out.println("Added");
+	}
+	
+	public static void addOutput(ItemStack output) {
+		outputs.add(output);
 	}
 
 	@EventHandler
 	public void onCraftEvent(CraftItemEvent e) {
-
 		loop: if (e.getRawSlot() == 0) {
 			ItemStack output = e.getInventory().getItem(0);
 			for (ItemStack portalGun : portalGuns) {
 				if (output.isSimilar(portalGun)) {
+					break loop;
+				}
+			}
+			
+			for (ItemStack outs : outputs) {
+				if (output.isSimilar(outs)) {
 					break loop;
 				}
 			}
@@ -65,15 +71,5 @@ public class CraftingListener implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-	}
-
-	@EventHandler
-	public void onPlayerJoinEvent(PlayerJoinEvent e) {
-		ItemStack pearl = new ItemStack(Material.ENDER_PEARL);
-		ItemMeta meta = pearl.getItemMeta();
-		meta.setDisplayName("Test");
-		pearl.setItemMeta(meta);
-
-		e.getPlayer().getInventory().addItem(pearl);
 	}
 }
